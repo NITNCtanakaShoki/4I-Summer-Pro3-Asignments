@@ -1,16 +1,16 @@
 import InputLoop from "https://deno.land/x/input@2.0.3/index.ts";
 import { CProgramFile } from "./tests/CProgramFile.ts"
 import { print, println, CC } from "./tests/print.ts"
-import { download } from "./tests/download.ts"
+import { download, downloadSample } from "./tests/download.ts"
 import test = Deno.test
 
 const input = new InputLoop()
 const compiler: string = await input.question("コンパイラ (cc? or gcc?):")
 const attendNumber: number = Number.parseInt(await input.question("出席番号:"))
-const directory: string = await input.question("Cコードのディレクトリ(例: ./)")
-const sampleDirectory: string = await input.question("サンプルのディレクトリ(例: ./samples)")
-
+const sampleDirectory = "./samples/"
 const samples = [1, 2, 3, 4, 5, 6].map( num => `sample${num}.pgm`)
+await downloadSample(samples)
+
 const testCases = [
     // { name: "2chi", arg: 1 },
     { name: "nega", arg: 1 },
@@ -23,6 +23,8 @@ const testCases = [
     { name: "tate", arg: 2 },
     { name: "in", arg: 2 },
 ]
+
+await download(testCases.map(test => test.name))
 
 const argOne = async (expected: CProgramFile, actual: CProgramFile) => {
     for (const sample of samples) {
@@ -58,21 +60,20 @@ const argTwo = async (expected: CProgramFile, actual: CProgramFile) => {
 for (const testCase of testCases) {
     println("=================================")
     println(`case: ${testCase.name}`)
-    const actualProgram = new CProgramFile(`${directory}${attendNumber}-${testCase.name}.c`)
+    const actualProgram = new CProgramFile(`${attendNumber}-${testCase.name}.c`)
     if (!(await actualProgram.isExist())) {
         println("    FAIL: ファイルが存在しません", CC.YELLOW)
         continue
     }
-    await download(`22-${testCase.name}.c`)
-    const expectedProgram = new CProgramFile(`22-${testCase.name}.c`)
+    const expectedProgram = new CProgramFile(`expecteds/22-${testCase.name}.c`)
     if (testCase.arg === 1) {
         await argOne(expectedProgram, actualProgram)
     } else {
         await argTwo(expectedProgram, actualProgram)
     }
-    Deno.remove(`22-${testCase.name}.c`)
 }
 await Promise.all([
+    Deno.remove("samples", { recursive: true }),
     Deno.remove("a.out"),
     Deno.remove("expected"),
     Deno.remove("actual")
