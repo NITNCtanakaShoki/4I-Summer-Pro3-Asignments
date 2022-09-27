@@ -72,4 +72,9 @@ for (const testCase of testCases) {
     }
     Deno.remove(`22-${testCase.name}.c`)
 }
+await Promise.all([
+    Deno.remove("a.out"),
+    Deno.remove("expected"),
+    Deno.remove("actual")
+])
 println("=================================")
