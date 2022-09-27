@@ -9,6 +9,8 @@ const compiler: string = await input.question("コンパイラ (cc? or gcc?):")
 const attendNumber: number = Number.parseInt(await input.question("出席番号:"))
 const sampleDirectory = "./samples/"
 const samples = [1, 2, 3, 4, 5, 6].map( num => `sample${num}.pgm`)
+
+
 await downloadSample(samples)
 
 const testCases = [
@@ -74,6 +76,7 @@ for (const testCase of testCases) {
 }
 await Promise.all([
     Deno.remove("samples", { recursive: true }),
+    Deno.remove("expecteds", { recursive: true }),
     Deno.remove("a.out"),
     Deno.remove("expected"),
     Deno.remove("actual")
