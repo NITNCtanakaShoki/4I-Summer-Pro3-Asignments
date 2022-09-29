@@ -44,15 +44,16 @@ void write(char* filename, struct image* writeImage) {
 Image bigger;
 Image smaller;
 Image target;
+Image copy;
 
 int main(int argc, char **argv) {
     read(argv[1], &bigger);
     read(argv[2], &smaller);
 
     if (bigger.width < smaller.width) {
-        Image *copy = &bigger;
+        copy = bigger;
         bigger = smaller;
-        smaller = *copy;
+        smaller = copy;
     }
 
     target.width = bigger.width;
