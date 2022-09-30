@@ -77,7 +77,6 @@ for (const testCase of testCases) {
 await Promise.all([
     Deno.remove("samples", { recursive: true }),
     Deno.remove("expecteds", { recursive: true }),
-    Deno.remove("a.out"),
     Deno.remove("expected"),
     Deno.remove("actual")
 ])
