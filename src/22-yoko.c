@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define SIZE 2000
+#define SIZE 2048
 
 typedef struct image {
     char pgmType[1000];
